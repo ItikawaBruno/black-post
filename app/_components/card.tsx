@@ -6,7 +6,6 @@ import ButtonModal from "./button-modal";
 
 export default function CardModal(){
 
-
     return(
         <div>
                         <Card className="bg-black border-none text-white shadow-md">

@@ -4,10 +4,14 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/dist/server/api-utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ReactHTMLElement, useState } from "react";
 
 export default function SingnInPage(){
+
+  const router = useRouter();
 
   type dataForm = {
     email:string,
@@ -25,8 +29,17 @@ export default function SingnInPage(){
       email: dataUser.email, // required
       password: dataUser.password, // required
       rememberMe: true,
-      callbackURL: "/main",
     });
+
+    if(error){
+      alert("E-mail ou senha invalido!")
+      return
+    }
+
+    const userId = data.user.id
+    if(userId){
+      router.push(`/main/${userId}`)
+    }
   }
 
     return(

@@ -1,12 +1,17 @@
+'use client'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
 
 
-interface ModalProps{
+
+export default function Modal(){
+
+    interface ModalProps{
     dataPost:{
         title:string,
         description:string,
@@ -19,10 +24,35 @@ interface ModalProps{
     }>>;
 }
 
-export default function Modal({dataPost, setDataPost}:ModalProps){
+    type dPost = {
+    title:string,
+    description:string,
+    image:string,
+    }
+    
+    const [listPost, setListPost ] = useState([])
+    const [ dataPost, setDataPost ] = useState<dPost>({
+        title:"",
+        description:"",
+        image:"",
+    })
+        
+        async function handleCreate(e:React.FormEvent<HTMLFormElement>){
+            e.preventDefault()
+            const response = await fetch('/api/create-post',{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(dataPost)
+            })
+            setDataPost({title:"",description:"",image:""})
+        }
+
+    
     return(
         <Dialog>
-                        <form action="">
+                        <form onSubmit={handleCreate}>
                             <DialogTrigger asChild>
                                 <Button className="cursor-pointer"><Plus className="text-white"></Plus></Button>
                             </DialogTrigger>
