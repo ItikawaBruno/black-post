@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Image from "next/image";
 
-export default function ButtonModal(){
+export default function ButtonModal({description, title}: {description?: string, title?: string})   {
     return(
         <div className="ml-auto">
             <Dialog>
@@ -10,8 +11,8 @@ export default function ButtonModal(){
                     </DialogTrigger>
                 <DialogContent className="bg-black text-white border-none shadow-md">
                     <DialogHeader>
-                        <DialogTitle>Titulo</DialogTitle>
-                        <DialogDescription></DialogDescription>
+                        <DialogTitle>{title}</DialogTitle>
+                        <DialogDescription>{description}</DialogDescription>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>

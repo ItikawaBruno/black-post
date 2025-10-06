@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { LogOutIcon } from "lucide-react"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -19,8 +20,22 @@ export default function LogoutButton() {
   }
 
   return (
-    <Button onClick={logout} className="cursor-pointer">
-      <LogOutIcon className="text-white" />
-    </Button>
+    <AlertDialog>
+      <AlertDialogTrigger className="bg-[#1f1e21d3] rounded-md p-2 hover:bg-[#1f1e21]">
+      <LogOutIcon className="text-white h-5 w-5" />
+      </AlertDialogTrigger>
+      <AlertDialogContent className="bg-black text-white border-none shadow-md">
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+          you sure you want to logout?
+          </AlertDialogTitle>
+          <AlertDialogDescription>Click in continue to logout.</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+        <AlertDialogCancel className="text-black">Cancel</AlertDialogCancel>
+        <Button variant="default" onClick={logout}>Continue</Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

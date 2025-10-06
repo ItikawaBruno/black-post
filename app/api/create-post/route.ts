@@ -3,16 +3,17 @@ import { NextResponse } from "next/server"
 
 
 export async function POST(req:Request){
-    const body = await req.json()
-    const { title, description, image } = body
 
+    const data = await req.formData()
+    const title = data.get("title") as string
+    const description = data.get("description") as string
+    const userId = data.get("userId") as string
     const post = await prisma.post.create({
         data:{
             title,
             description,
-            image,
-            userId:"",
-            likes:0
+            userId,
+            likes: 0
         }
     })
 

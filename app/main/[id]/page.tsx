@@ -24,7 +24,19 @@ export default async function MainPage(){
         redirect('/sign-in')
     }
 
+    const dbDataPosts = await prisma.post.findMany({
+        where:{
+            userId: session.user.id
+        }
+    })
 
+
+    const dbDataMostPopular = await prisma.post.findMany({
+        orderBy:{
+            likes: 'desc'
+        },
+        take: 10
+    })
 
     return(
         <div className="bg-[#1c1b25] min-h-full w-full">
@@ -33,22 +45,32 @@ export default async function MainPage(){
                 <div className="space-y-3">
                     <h2 className="ml-6 text-3xl font-extralight">Most Popular</h2>
                     <section className="grid grid-cols-4 ml-4 gap-2 p-2">
-                        <CardModal />
-                    </section>
-                </div>
-                <div className="space-y-3">
-                    <h2 className="text-3xl font-extralight ml-6">Favorites</h2>
-                    <section className="grid grid-cols-4 ml-4 gap-2 p-2">
-                        <CardModal></CardModal>
-                        <CardModal></CardModal>
-                        <CardModal></CardModal>
-                        <CardModal></CardModal>
+                        {
+                            dbDataMostPopular.map((post) => (
+                                <CardModal
+                                    key={post.id}
+                                    title={post.title ?? ""}
+                                    description={post.description ?? ""}
+                                    likes={post.likes ?? 0}
+                                />
+                            ))}
                     </section>
                 </div>
                 <div className="space-y-3">
                     <h2 className="ml-6 font-extralight text-3xl">My Posts</h2>
                     <section className="grid grid-cols-4 ml-4 gap-2 p-2">
-                        
+                        {
+                            dbDataPosts.map((post) => (
+                                <CardModal
+                                    key={post.id}
+                                    title={post.title ?? ""}
+                                    description={post.description ?? ""}
+                                    likes={post.likes ?? 0}
+                                    userId={post.userId ?? ""}
+                                    postId={post.id ?? ""}
+                                />
+                            ))
+                        }
                     </section>
                 </div>
             </main>

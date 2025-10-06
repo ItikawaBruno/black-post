@@ -18,9 +18,10 @@ model Post{
   id String @id @default(cuid())
   title String?
   description String?
-  image String?
   likes Int?
   userId String
+  userLikes String []
+  userFavorites String []
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("post")
