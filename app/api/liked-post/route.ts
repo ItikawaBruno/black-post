@@ -5,7 +5,9 @@ import prisma from "@/lib/prisma";
 
 export async function PATCH(req: Request) {
     try {
-        const { userId, postId } = await req.json();
+        const data = await req.formData()
+        const userId = data.get("userId") as string
+        const postId = data.get("postId") as string
 
         const post = await prisma.post.update({
             where: { id: postId },
@@ -24,15 +26,23 @@ export async function PATCH(req: Request) {
 
 export async function PUT(req: Request) {
     try {
-        const { userId, postId } = await req.json();
-
+        const data = await req.formData()
+        const userId =data.get("userId") as string
+        const postId = data.get("postId") as string
         // Remove o userId do array userLikes
         const post = await prisma.post.update({
             where: { id: postId },
             data: {
                 likes: { decrement: 1 },
                 userLikes: {
-                    set: [] // se quiser remover só o userId específico, precisamos filtrar o array antes
+                    set: ([] as string[]) // gostaria o userId que curtiu
+                        .concat(
+                            (await prisma.post.findUnique({
+                                where: { id: postId },
+                                select: { userLikes: true }
+                            }))?.userLikes.filter((id: string) => id !== userId) || []
+                        )
+                        .filter((id, index, self) => self.indexOf(id) === index)
                 }
             }
         });

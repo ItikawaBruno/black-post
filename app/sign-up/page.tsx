@@ -2,8 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Meteors } from "@/components/ui/meteors";
 import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/dist/server/api-utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
@@ -14,6 +17,8 @@ export default function SingUpPage() {
     email:string,
     password:string,
   }
+
+  const router = useRouter();
 
   const [dataUser, setDataUser] = useState<formData>({
     name: "",
@@ -29,7 +34,8 @@ export default function SingUpPage() {
     password: dataUser.password, // required
     callbackURL: "/sign-in",
 });
-
+  
+  router.push('/sign-in')
 
 if (error) {
       console.error("Erro ao cadastrar:", error);
@@ -42,7 +48,7 @@ if (error) {
     <div className="h-screen w-full bg-[#0e0f16] flex items-center justify-center relative overflow-hidden">
 
       <div className="absolute inset-0 bg-gradient-to-br from-[#0c0c14] via-[#12131b] to-[#1c1d27]"></div>
-
+      <Meteors/>
       <div className="absolute w-[400px] h-[400px] bg-[#1a1b26] rounded-full blur-[120px] opacity-50 top-[-100px] left-[-100px]"></div>
       <div className="absolute w-[500px] h-[500px] bg-[#20212e] rounded-full blur-[150px] opacity-40 bottom-[-150px] right-[-150px]"></div>
       <div className="absolute w-[250px] h-[250px] bg-[#10121b] rounded-full blur-[80px] opacity-60 bottom-[100px] left-[200px]"></div>

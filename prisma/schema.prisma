@@ -20,8 +20,8 @@ model Post{
   description String?
   likes Int?
   userId String
-  userLikes String []
-  userFavorites String []
+  userLikes String[] @default([])
+  userFavorites String [] @default([])
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("post")

@@ -1,6 +1,8 @@
+import { Confetti } from "@/components/ui/confetti";
 import LogoutButton from "./logout-button";
 import Modal from "./modal";
 import prisma from "@/lib/prisma";
+import ButtonCelebrate from "./buttonCelebrate";
 
 
 export default function Header(){
@@ -11,6 +13,7 @@ export default function Header(){
         
                         <h1 className="text-white text-3xl font-extrabold">Black Post</h1>
                         <div className="flex gap-4">
+                            <ButtonCelebrate>Celebrate</ButtonCelebrate>
                             <Modal></Modal>
                             <LogoutButton></LogoutButton>
                         </div>

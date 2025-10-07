@@ -16,12 +16,16 @@ import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
+import toast, { Toaster } from "react-hot-toast"
+import CreateToast from "./create-toast"
 
 
 export default function Modal() {
   const params = useParams()
   const userId = params.id as string
 
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [dataPost, setDataPost] = useState({
@@ -58,8 +62,12 @@ export default function Modal() {
       // ✅ Limpa os campos e fecha o modal
       setDataPost({ title: "", description: "", userId })
       setOpen(false)
-
+      toast.dismiss()
+      toast.success("Post created successfully!")
+      router.refresh() // ✅ Atualiza a página para mostrar o novo post
     } catch (error) {
+      toast.dismiss()
+      toast.error("Error creating post!")
       console.error("Network error:", error)
       alert("Network error!")
     } finally {
@@ -68,7 +76,9 @@ export default function Modal() {
   }
 
   return (
+    <>
     <Dialog open={open} onOpenChange={setOpen}>
+      <CreateToast></CreateToast>
       <DialogTrigger asChild>
         <Button className="cursor-pointer" onClick={() => setOpen(true)}>
           <Plus className="text-white" />
@@ -78,7 +88,7 @@ export default function Modal() {
       <DialogContent className="bg-black text-white border-none shadow-md">
         <DialogHeader>
           <DialogTitle>
-            Create your <span className="font-bold text-[#403965]">Black Post</span>
+            Create your <span className="font-extrabold text-[#5e5589]">Black Post</span>
           </DialogTitle>
         </DialogHeader>
 
@@ -92,7 +102,7 @@ export default function Modal() {
                 className="text-white border-none bg-[#373346]"
                 value={dataPost.title}
                 onChange={(e) => setDataPost({ ...dataPost, title: e.target.value })}
-              />
+                />
             </div>
             <div className="flex flex-col space-y-2 mb-4">
               <Label htmlFor="description">Description</Label>
@@ -102,7 +112,7 @@ export default function Modal() {
                 className="text-white border-none bg-[#373346]"
                 value={dataPost.description}
                 onChange={(e) => setDataPost({ ...dataPost, description: e.target.value })}
-              />
+                />
             </div>
           </div>
 
@@ -117,12 +127,13 @@ export default function Modal() {
               type="submit"
               className="cursor-pointer"
               disabled={loading || !dataPost.title.trim() || !dataPost.description.trim()}
-            >
+              >
               {loading ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
+              </>
   )
 }

@@ -6,7 +6,10 @@ export default function MarketingPage() {
 
   return (
     <>
-      <div className="h-screen w-full bg-gradient-to-tr from-[#17181e] via-[#27223e] to-[#17181e] flex justify-center items-center">
+      <div className="h-screen w-full bg-[#0000008f] flex justify-center items-center">
+          <video className="absolute top-0 left-0 w-full h-full object-cover -z-10" autoPlay loop muted playsInline aria-hidden>
+      <source src="/video-marketing-2.mp4" type="video/mp4" />
+    </video>
         <div className="flex flex-col items-center text-center space-y-8 px-6 max-w-2xl">
           {/* Título principal */}
           <div>
@@ -21,12 +24,12 @@ export default function MarketingPage() {
           {/* Texto de marketing */}
           <div className="space-y-4">
             <p className="text-white leading-relaxed text-base md:text-lg">
-              Create your <span className="font-bold text-[#9b8bff]">Black Post</span> for{" "}
-              <span className="font-bold text-[#9b8bff]">ALL</span>.
+              Create your <span className="font-bold text-[#edda2a]">Black Post</span> for{" "}
+              <span className="font-bold text-[#edda2a]">ALL</span>.
             </p>
             <p className="text-gray-300 text-sm md:text-base">
               Share your ideas, stories, and opinions — <br />
-              <span className="font-semibold text-[#9b8bff]">completely anonymous.</span>
+              <span className="font-semibold text-[#edda2a]">completely anonymous.</span>
             </p>
             <p className="text-gray-400 text-xs max-w-sm mx-auto">
               Express yourself freely. No profiles. No judgment. Just real thoughts.
@@ -48,11 +51,6 @@ export default function MarketingPage() {
                 Login
               </Button>
             </Link>
-          </div>
-
-          {/* Rodapé */}
-          <div className="text-gray-500 text-xs pt-10">
-            © {new Date().getFullYear()} Black Post — Speak Freely.
           </div>
         </div>
       </div>
