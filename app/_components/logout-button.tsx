@@ -21,8 +21,8 @@ export default function LogoutButton() {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="bg-[#1f1e21d3] rounded-md p-2 hover:bg-[#1f1e21]">
-      <LogOutIcon className="text-white h-5 w-5" />
+      <AlertDialogTrigger className="bg-[#282525] p-2.5 rounded-md hover:bg-red-700 transition-colors">
+      <LogOutIcon className="text-white h-4 w-4" />
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-black text-white border-none shadow-md">
         <AlertDialogHeader>

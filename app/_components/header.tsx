@@ -1,7 +1,6 @@
 import { Confetti } from "@/components/ui/confetti";
 import LogoutButton from "./logout-button";
 import Modal from "./modal";
-import prisma from "@/lib/prisma";
 import ButtonCelebrate from "./buttonCelebrate";
 
 
@@ -12,7 +11,7 @@ export default function Header(){
                         <div className="w-full flex justify-between items-center bg-[#000000] p-3 rounded-md shadow-md">
         
                         <h1 className="text-white text-3xl font-extrabold">Black Post</h1>
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 p-1 items-center">
                             <ButtonCelebrate>Celebrate</ButtonCelebrate>
                             <Modal></Modal>
                             <LogoutButton></LogoutButton>
