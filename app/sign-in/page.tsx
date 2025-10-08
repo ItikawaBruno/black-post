@@ -65,10 +65,10 @@ export default function SingnInPage(){
             <Input type="password" placeholder="Informe sua senha" className="bg-[#1a1b26] border-gray-700 text-white" value={dataUser.password} onChange={(e) => setDataUser({...dataUser, password:e.target.value})}/>
           </div>
           <Button variant="ghost" className="text-black font-light text-[18px] bg-white w-full hover:bg-gray-200 transition-all">
-            Create
+            Sign in
           </Button>
           <div className="flex mt-3">
-            <Link href="/sign-up" className="mx-auto underline">Sign in</Link>
+            <Link href="/sign-up" className="mx-auto underline">create an account</Link>
           </div>
         </form>
       </div>
