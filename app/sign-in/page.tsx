@@ -68,7 +68,7 @@ export default function SingnInPage(){
             Create
           </Button>
           <div className="flex mt-3">
-            <Link href="/sign-up" className="mx-auto underline">Create a count</Link>
+            <Link href="/sign-up" className="mx-auto underline">Sign in</Link>
           </div>
         </form>
       </div>
