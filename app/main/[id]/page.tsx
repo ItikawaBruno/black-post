@@ -63,7 +63,7 @@ export default async function MainPage(){
                                 title={post.title ?? ""}
                                 description={post.description ?? ""}
                                 likes={post.likes ?? 0}
-                                userId={post.userId ?? ""}
+                                userId={session.user.id}
                                 postId={post.id ?? ""}
                                 postIdFavorites={post.userFavorites ?? []}
                                 />
@@ -81,7 +81,7 @@ export default async function MainPage(){
                                 title={post.title ?? ""}
                                 description={post.description ?? ""}
                                 likes={post.likes ?? 0}
-                                userId={post.userId ?? ""}
+                                userId={session.user.id}
                                 postId={post.id ?? ""}
                                 postIdFavorites={post.userFavorites ?? []}
                                 />
@@ -100,7 +100,7 @@ export default async function MainPage(){
                                 title={post.title ?? ""}
                                 description={post.description ?? ""}
                                 likes={post.likes ?? 0}
-                                userId={post.userId ?? ""}
+                                userId={session.user.id}
                                 postId={post.id ?? ""}
                                 postIdFavorites={post.userFavorites ?? []}
                                 />
