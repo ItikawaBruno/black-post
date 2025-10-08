@@ -1,9 +1,15 @@
-import { createAuthClient } from "better-auth/react"
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import prisma from "@/lib/prisma";
 
-export const authClient = createAuthClient({
-  /** URL do seu servidor */
-  baseURL: "https://black-post.vercel.app",
-})
+const betterAuthUrl = process.env.BETTER_AUTH_URL || "http://localhost:3000";
 
-// Extraia os métodos do mesmo cliente
-export const { signIn, signUp, useSession } = authClient
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "postgresql",
+  }),
+  emailAndPassword: {
+    enabled: true,
+  },
+  trustedOrigins: [betterAuthUrl],
+});
