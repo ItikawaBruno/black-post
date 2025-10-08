@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import toast, { Toaster } from "react-hot-toast"
@@ -28,11 +28,20 @@ export default function Modal() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [cooldown, setCooldown] = useState(0)
   const [dataPost, setDataPost] = useState({
     title: "",
     description: "",
     userId
   })
+
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [cooldown])
 
 
   async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
@@ -50,14 +59,22 @@ export default function Modal() {
         body: data
       })
 
+      const responseData = await response.json()
+
       if (!response.ok) {
+        if (response.status === 429) {
+          // Rate limit error - set cooldown timer
+          const retryAfter = responseData.retryAfter || 600 // 10 minutes default
+          setCooldown(retryAfter)
+          toast.dismiss()
+          toast.error(responseData.error || "Too many posts! Please wait before creating another.")
+        } else {
+          toast.dismiss()
+          toast.error(responseData.error || "Error creating post!")
+        }
         console.error("Server error:", response.statusText)
-        alert("Error creating post!")
         return
       }
-
-      // ✅ Espera a resposta antes de fechar
-      await response.json()
 
       // ✅ Limpa os campos e fecha o modal
       setDataPost({ title: "", description: "", userId })
@@ -67,9 +84,8 @@ export default function Modal() {
       router.refresh() // ✅ Atualiza a página para mostrar o novo post
     } catch (error) {
       toast.dismiss()
-      toast.error("Error creating post!")
+      toast.error("Network error! Please try again.")
       console.error("Network error:", error)
-      alert("Network error!")
     } finally {
       setLoading(false)
     }
@@ -90,6 +106,14 @@ export default function Modal() {
           <DialogTitle>
             Create your <span className="font-extrabold text-[#5e5589]">Black Post</span>
           </DialogTitle>
+          {cooldown > 0 && (
+            <p className="text-sm text-red-400 mt-2">
+              Rate limit active. You can create another post in {Math.floor(cooldown / 60)}:{(cooldown % 60).toString().padStart(2, '0')}
+            </p>
+          )}
+          <p className="text-xs text-gray-400 mt-1">
+            Limit: 3 posts per 10 minutes
+          </p>
         </DialogHeader>
 
         <form onSubmit={handleCreate}>
@@ -126,9 +150,14 @@ export default function Modal() {
             <Button
               type="submit"
               className="cursor-pointer"
-              disabled={loading || !dataPost.title.trim() || !dataPost.description.trim()}
+              disabled={loading || !dataPost.title.trim() || !dataPost.description.trim() || cooldown > 0}
               >
-              {loading ? "Creating..." : "Create"}
+              {loading 
+                ? "Creating..." 
+                : cooldown > 0 
+                  ? `Wait ${Math.floor(cooldown / 60)}:${(cooldown % 60).toString().padStart(2, '0')}`
+                  : "Create"
+              }
             </Button>
           </DialogFooter>
         </form>
