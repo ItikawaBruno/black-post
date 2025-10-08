@@ -24,8 +24,28 @@ export default function SingnInPage(){
     password:""
   })
 
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
   async function handleSubmit(e:React.FormEvent<HTMLFormElement>){
     e.preventDefault()
+    // client-side validation
+    const newErrors: { email?: string; password?: string } = {};
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!dataUser.email) {
+      newErrors.email = "E-mail é obrigatório";
+    } else if (!emailRegex.test(dataUser.email)) {
+      newErrors.email = "Email inválido";
+    }
+
+    if (!dataUser.password) {
+      newErrors.password = "Senha é obrigatória";
+    } else if (dataUser.password.length < 8) {
+      newErrors.password = "A senha deve ter pelo menos 8 caracteres";
+    }
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
     const { data, error } = await authClient.signIn.email({
       email: dataUser.email, // required
       password: dataUser.password, // required
@@ -58,11 +78,13 @@ export default function SingnInPage(){
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-3 mb-5">
             <Label className="font-light">E-mail</Label>
-            <Input placeholder="Informe seu e-mail" className="bg-[#1a1b26] border-gray-700 text-white" value={dataUser.email} onChange={(e) => setDataUser({...dataUser, email:e.target.value})}/>
+            <Input type="email" placeholder="Informe seu e-mail" className="bg-[#1a1b26] border-gray-700 text-white" value={dataUser.email} onChange={(e) => { setDataUser({...dataUser, email:e.target.value}); setErrors(prev=>({ ...prev, email: undefined })); }}/>
+            {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
           </div>
           <div className="flex flex-col space-y-3 mb-5">
             <Label className="font-light">Password</Label>
-            <Input type="password" placeholder="Informe sua senha" className="bg-[#1a1b26] border-gray-700 text-white" value={dataUser.password} onChange={(e) => setDataUser({...dataUser, password:e.target.value})}/>
+            <Input type="password" placeholder="Informe sua senha" className="bg-[#1a1b26] border-gray-700 text-white" value={dataUser.password} onChange={(e) => { setDataUser({...dataUser, password:e.target.value}); setErrors(prev=>({ ...prev, password: undefined })); }} minLength={8} />
+            {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
           </div>
           <Button variant="ghost" className="text-black font-light text-[18px] bg-white w-full hover:bg-gray-200 transition-all">
             Sign in

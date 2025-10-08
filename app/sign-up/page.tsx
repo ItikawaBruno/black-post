@@ -26,21 +26,40 @@ export default function SingUpPage() {
     password: "",
   });
 
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
   async function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const { data, error } = await authClient.signUp.email({
-    name: dataUser.name, // required
-    email: dataUser.email, // required
-    password: dataUser.password, // required
-    callbackURL: "/sign-in",
-});
-  
-  router.push('/sign-in')
+    // client-side validation
+    const newErrors: { email?: string; password?: string } = {};
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!dataUser.email) {
+      newErrors.email = "E-mail é obrigatório";
+    } else if (!emailRegex.test(dataUser.email)) {
+      newErrors.email = "Email inválido";
+    }
 
-if (error) {
+    if (!dataUser.password) {
+      newErrors.password = "Senha é obrigatória";
+    } else if (dataUser.password.length < 8) {
+      newErrors.password = "A senha deve ter pelo menos 8 caracteres";
+    }
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    const { data, error } = await authClient.signUp.email({
+      name: dataUser.name, // required
+      email: dataUser.email, // required
+      password: dataUser.password, // required
+      callbackURL: "/sign-in",
+    });
+
+    if (error) {
       console.error("Erro ao cadastrar:", error);
     } else {
       console.log("Usuário criado:", data);
+      router.push('/sign-in');
     }
   }
 
@@ -59,15 +78,17 @@ if (error) {
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-3 mb-5">
             <Label className="font-light">Name</Label>
-            <Input placeholder="Informe seu nome" value={dataUser.name} onChange={(e) => setDataUser({ ...dataUser, name: e.target.value })} className="bg-[#1a1b26] border-gray-700 text-white" />
+            <Input placeholder="Informe seu nome" value={dataUser.name} onChange={(e) => setDataUser({ ...dataUser, name: e.target.value })} className="bg-[#1a1b26] border-gray-700 text-white" required/>
           </div>
           <div className="flex flex-col space-y-3 mb-5">
             <Label className="font-light">E-mail</Label>
-            <Input placeholder="Informe seu e-mail" value={dataUser.email} onChange={(e) => setDataUser({...dataUser, email:e.target.value})} className="bg-[#1a1b26] border-gray-700 text-white" />
+            <Input type="email" placeholder="Informe seu e-mail" value={dataUser.email} onChange={(e) => { setDataUser({...dataUser, email:e.target.value}); setErrors(prev=>({ ...prev, email: undefined })); }} className="bg-[#1a1b26] border-gray-700 text-white" required/>
+            {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
           </div>
           <div className="flex flex-col space-y-3 mb-5">
             <Label className="font-light">Password</Label>
-            <Input type="password" placeholder="Informe sua senha" value={dataUser.password} onChange={(e) => setDataUser({...dataUser, password:e.target.value})} className="bg-[#1a1b26] border-gray-700 text-white" />
+            <Input type="password" placeholder="Informe sua senha" value={dataUser.password} onChange={(e) => { setDataUser({...dataUser, password:e.target.value}); setErrors(prev=>({ ...prev, password: undefined })); }} className="bg-[#1a1b26] border-gray-700 text-white" required minLength={8} />
+            {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
           </div>
             <Button variant="ghost" className="text-black font-light text-[18px] w-full bg-white px-6 hover:bg-gray-200 transition-all">
             Create
